@@ -1,4 +1,4 @@
-# League Win Predictor
+# The Cost of Winning
 
 by: Edward New
 
@@ -92,3 +92,13 @@ This seems unavoidable since the entire game is like one big positive feedback l
 An interesting route for further investigation could possibly be to add even more granularity to the model by giving it the individual differences in stats between the roles of a game (ex. jungle_golddiffat15, adc_xpdiffat15, etc.). Although it is likely these granualar features will have less importance/impact on the final outcome of the model compared to the overall gold and xp differences between the teams at 15 minuites.
 
 ## Fairness Analysis
+
+We are curious to see if our final prediction model is better at predicting game outcomes depending on what side of the map the team it is trying to predict is playing on. Our evaluation metric of choice is going to be accuracy since we don't really have a preferance for False Positives versus False Neagatives. Our data is very symmetric since for each game on the red side, there is the opponents who play on the blue side.
+
+-   Null Hypothesis: The accuracy of the prediction model is the same between red and blue side
+
+-   Alternative Hypothesis: The accuracy of the prediction model is difference between red and blue side
+
+We wont make an assumption for which way the alternative hypothesis should lean since there really is no intuitive guess for which side would be favored it there was a difference in performance.
+
+-   Our test statistic of choice will be the absolute difference of mean accuracy
