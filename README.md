@@ -49,3 +49,46 @@ Unsuprisingly, the inital model does not have amazing performance.
 Although, the model does show some promise, with a ~16% improvement over taking a 50/50 guess. The model has reltatively low bias since there are so few features and the tree depth is so shallow but it has pretty decent variance. We will try to improve the bias of this model by giving it some more features to work with and some more freedom to make more specific classification splits with deeper tree depths.
 
 ## Final Model
+
+Now that we have an idea for how a very rudimentary model performs, we will try to improve on it.
+
+The key idea motivating the choice of features for our final model is that giving the model more granularity for the state of the game at the 15 minuite mark will allow the model to make better decisions/classifications on the result of the game.
+
+### Model Features:
+
+Instead of looking at the data from the perspective of one team, we will try to give the model a more complete picture for the state of the game realtive to the team's opponenets as well. Thus, we will look at the difference of the feature values between the teams at the 15 minuite mark:
+
+-   golddiffat15
+-   xpdiffat15
+-   csdiffat15
+-   killsat15diff
+-   turretplatesdiff
+
+### Meta Features:
+
+On top of the data that the model is being fed, we also make conscious decisions for what type of classifier we want to use and the hyper parameters we end up using for the training model. We decided to use a Binary Decision Tree Classifier because we want to be able to interpret the results of the model to gain some insights into what factors play a role in winning a game. Other classifiers such as Random Forests or a logistic classifier are great for making more accurate predictions but they are black boxes that are hard to learn from.
+
+As for the model's hyperparemeters, we ran a GridSerach to find the most optimal max tree depth and minimum sample split size.
+We found:
+
+-   Max Depth: 5
+-   Min Sample Split: 1200
+
+### Model Results:
+
+![Final Binary Decision Tree for Win Loss Prediction Model](final.png)
+
+The final model did end up outperforming the Baseline Model.
+
+-   Training Set Accuracy: 0.7471
+-   Test Set Accuracy: 0.7395
+
+However, it was interesting to see that most of the Decision Tree splits looked at the difference in gold and difference in xp between the teams. This came as a slight surprise since we would have thought that the model would leverage the extra granularity availiable to it to make more specific splits but this result does make sense.
+
+Unfortunately, one of the big issues with a lot of the features that we use in our model is that a lot of them are ultimately colinear since a lot of the features are dependent on each other. For example, the more kills you have or the more turretplates you have, the more gold you have. So ultimately, gold will always be the most imporatant feature to look at.
+
+This seems unavoidable since the entire game is like one big positive feedback loop of gaining gold and xp, leveraging that gold and xp to buy items, to ultimately get more gold, ... etc. until eventually one team gets strong enough to overpower the other.
+
+An interesting route for further investigation could possibly be to add even more granularity to the model by giving it the individual differences in stats between the roles of a game (ex. jungle_golddiffat15, adc_xpdiffat15, etc.). Although it is likely these granualar features will have less importance/impact on the final outcome of the model compared to the overall gold and xp differences between the teams at 15 minuites.
+
+## Fairness Analysis
